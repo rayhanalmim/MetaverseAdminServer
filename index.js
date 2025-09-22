@@ -1,6 +1,7 @@
 const path = require('path');
 // load dependencies
 const env = require('dotenv');
+const cors = require('cors');
 const csrf = require('csurf');
 const express = require('express');
 const flash = require('express-flash');
@@ -18,8 +19,20 @@ const webRoutes = require('./routes/web');
 const sequelize = require('./config/database');
 const errorController = require('./app/controllers/ErrorController');
 
+console.log('all the env variables', process.env.SESSION_SECRET);
+
 env.config();
+
+// CORS configuration for client-server communication
+app.use(cors({
+    origin: 'http://localhost:5173', // Vite dev server default port
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
+}));
+
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json()); // Add JSON body parser for API requests
 app.use(express.static(path.join(__dirname, 'public')));
 
 // required for csurf
@@ -34,12 +47,22 @@ app.use(session({
     }),
 }));
 
-app.use(csrfProtection);
+// Apply CSRF protection only to non-API routes
+app.use((req, res, next) => {
+    if (req.path.startsWith('/api/')) {
+        return next();
+    }
+    csrfProtection(req, res, next);
+});
+
 app.use(flash());
 
 app.use((req, res, next) => {
 	res.locals.isAuthenticated = req.session.isLoggedIn;
-	res.locals.csrfToken = req.csrfToken();
+	// Only set CSRF token for non-API routes
+	if (!req.path.startsWith('/api/')) {
+		res.locals.csrfToken = req.csrfToken();
+	}
 	next();
 });
 
