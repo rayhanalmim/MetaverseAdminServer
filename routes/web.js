@@ -4,6 +4,7 @@ const HomeController = require('../app/controllers/HomeController');
 const AuthController = require('../app/controllers/AuthController');
 const UserController = require('../app/controllers/UserController');
 const AdminController = require('../app/controllers/AdminController');
+const LiveStreamController = require('../app/controllers/LiveStreamController');
 
 router.get('/', HomeController.homePage);
 router.get('/login', AuthController.loginPage);
@@ -45,5 +46,17 @@ router.get('/api/admin/properties/search', AdminController.requireAdmin, AdminCo
 router.get('/api/admin/users/:userId/properties', AdminController.requireAdmin, AdminController.getUserProperties);
 router.post('/api/admin/users/:userId/properties', AdminController.requireAdmin, AdminController.assignPropertyToUser);
 router.delete('/api/admin/users/:userId/properties/:propertyId', AdminController.requireAdmin, AdminController.removePropertyFromUser);
+
+// Live Stream Management API Routes
+router.get('/api/admin/livestreams', AdminController.requireAdmin, LiveStreamController.getAllLiveStreams);
+router.get('/api/admin/livestreams/stats', AdminController.requireAdmin, LiveStreamController.getLiveStreamStats);
+router.get('/api/admin/livestreams/:id', AdminController.requireAdmin, LiveStreamController.getLiveStreamById);
+router.post('/api/admin/livestreams', AdminController.requireAdmin, LiveStreamController.createLiveStream);
+router.put('/api/admin/livestreams/:id', AdminController.requireAdmin, LiveStreamController.updateLiveStream);
+router.delete('/api/admin/livestreams/:id', AdminController.requireAdmin, LiveStreamController.deleteLiveStream);
+router.patch('/api/admin/livestreams/:id/toggle', AdminController.requireAdmin, LiveStreamController.toggleLiveStream);
+
+// Public Live Stream API Routes (for metaverse client)
+router.get('/api/livestream/active', LiveStreamController.getActiveLiveStream);
 
 module.exports = router;
