@@ -52,9 +52,31 @@ const User = sequelize.define('users', {
         type: DataTypes.STRING,
         allowNull: true
     },
+    forgot_code: {
+        type: DataTypes.STRING,
+        allowNull: true
+    },
+    forgot_code_expire: {
+        type: DataTypes.DATE,
+        allowNull: true
+    },
+    last_password_modify_time: {
+        type: DataTypes.DATE,
+        allowNull: true
+    },
     nft_metadata: {
         type: DataTypes.JSON,
         allowNull: true
+    },
+    is_streamer: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false
+    },
+    sgk_balance: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        defaultValue: 0
     },
     admin_role: {
         type: DataTypes.ENUM('user', 'admin', 'superadmin'),

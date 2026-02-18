@@ -5,6 +5,9 @@ const AuthController = require('../app/controllers/AuthController');
 const UserController = require('../app/controllers/UserController');
 const AdminController = require('../app/controllers/AdminController');
 const LiveStreamController = require('../app/controllers/LiveStreamController');
+const UserStreamAdminController = require('../app/controllers/UserStreamAdminController');
+const StreamerApplicationController = require('../app/controllers/StreamerApplicationController');
+const GiftStickerController = require('../app/controllers/GiftStickerController');
 
 router.get('/', HomeController.homePage);
 router.get('/login', AuthController.loginPage);
@@ -58,5 +61,26 @@ router.patch('/api/admin/livestreams/:id/toggle', AdminController.requireAdmin, 
 
 // Public Live Stream API Routes (for metaverse client)
 router.get('/api/livestream/active', LiveStreamController.getActiveLiveStream);
+
+// User Stream Admin API Routes
+router.get('/api/admin/user-streams', AdminController.requireAdmin, UserStreamAdminController.getAllUserStreams);
+router.get('/api/admin/user-streams/stats', AdminController.requireAdmin, UserStreamAdminController.getUserStreamStats);
+router.get('/api/admin/user-streams/:id', AdminController.requireAdmin, UserStreamAdminController.getUserStreamById);
+router.patch('/api/admin/user-streams/:id/status', AdminController.requireAdmin, UserStreamAdminController.updateStreamStatus);
+router.delete('/api/admin/user-streams/:id', AdminController.requireAdmin, UserStreamAdminController.deleteUserStream);
+
+// Streamer Application Admin API Routes
+router.get('/api/admin/streamer-applications', AdminController.requireAdmin, StreamerApplicationController.getAllApplications);
+router.patch('/api/admin/streamer-applications/:id/review', AdminController.requireAdmin, StreamerApplicationController.reviewApplication);
+
+// Gift & Sticker Admin API Routes
+router.get('/api/admin/gifts', AdminController.requireAdmin, GiftStickerController.getAllGifts);
+router.post('/api/admin/gifts', AdminController.requireAdmin, GiftStickerController.createGift);
+router.put('/api/admin/gifts/:id', AdminController.requireAdmin, GiftStickerController.updateGift);
+router.delete('/api/admin/gifts/:id', AdminController.requireAdmin, GiftStickerController.deleteGift);
+router.get('/api/admin/stickers', AdminController.requireAdmin, GiftStickerController.getAllStickers);
+router.post('/api/admin/stickers', AdminController.requireAdmin, GiftStickerController.createSticker);
+router.put('/api/admin/stickers/:id', AdminController.requireAdmin, GiftStickerController.updateSticker);
+router.delete('/api/admin/stickers/:id', AdminController.requireAdmin, GiftStickerController.deleteSticker);
 
 module.exports = router;

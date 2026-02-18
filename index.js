@@ -84,11 +84,9 @@ app.use(webRoutes);
 app.use(errorController.pageNotFound);
 
 sequelize
-	//.sync({force : true})
-	.sync()
+	.authenticate()
 	.then(() => {
 		app.listen(process.env.PORT);
-		//pending set timezone
 		console.log("App listening on port " + process.env.PORT);
 	})
 	.catch(err => {
